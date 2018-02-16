@@ -1,5 +1,5 @@
 {
-  "name": "react-sortable-tree",
+  "name": "@cdmbase/react-sortable-tree",
   "version": "2.0.1",
   "description": "Drag-and-drop sortable component for nested data and hierarchies",
   "scripts": {
@@ -10,7 +10,7 @@
     "start": "cross-env NODE_ENV=development TARGET=development webpack-dev-server --inline --hot",
     "lint": "eslint src examples",
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"{src,examples}/**/*.{js,css,md}\"",
-    "prepublishOnly": "npm run lint && npm run test && npm run build",
+    "prepublishOnly": "npm run build",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "deploy": "npm run build:demo && gh-pages -d build",
@@ -32,6 +32,9 @@
   "authors": [
     "Chris Fritz"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "jest": {
     "setupTestFrameworkScriptFile": "./node_modules/jest-enzyme/lib/index.js",
