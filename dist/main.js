@@ -1334,16 +1334,16 @@
             }, {
                 key: "render",
                 value: function() {
-                    var _this3 = this, _mergeTheme3 = mergeTheme(this.props), style = _mergeTheme3.style, className = _mergeTheme3.className, innerStyle = _mergeTheme3.innerStyle, rowHeight = _mergeTheme3.rowHeight, isVirtualized = _mergeTheme3.isVirtualized, placeholderRenderer = _mergeTheme3.placeholderRenderer, reactVirtualizedListProps = _mergeTheme3.reactVirtualizedListProps, _state = (_mergeTheme3.getNodeKey, 
-                    this.state), searchMatches = _state.searchMatches, searchFocusTreeIndex = _state.searchFocusTreeIndex, draggedDepth = (_state.draggedNode, 
+                    var _this3 = this, _mergeTheme3 = mergeTheme(this.props), style = _mergeTheme3.style, className = _mergeTheme3.className, innerStyle = _mergeTheme3.innerStyle, rowHeight = _mergeTheme3.rowHeight, isVirtualized = _mergeTheme3.isVirtualized, placeholderRenderer = _mergeTheme3.placeholderRenderer, reactVirtualizedListProps = _mergeTheme3.reactVirtualizedListProps, scrollToIndex = (_mergeTheme3.getNodeKey, 
+                    _mergeTheme3.scrollToIndex), _state = this.state, searchMatches = _state.searchMatches, draggedDepth = (_state.draggedNode, 
                     _state.draggedDepth), treeData = (_state.draggedMinimumTreeIndex, this.state.draggingTreeData || this.props.treeData), rows = this.getRows(treeData), matchKeys = {};
                     searchMatches.forEach(function(_ref8, i) {
                         var path = _ref8.path;
                         matchKeys[path[path.length - 1]] = i;
                     });
                     // Seek to the focused search result if there is one specified
-                    var scrollToInfo = null !== searchFocusTreeIndex ? {
-                        scrollToIndex: searchFocusTreeIndex
+                    var scrollToInfo = null !== scrollToIndex ? {
+                        scrollToIndex: scrollToIndex
                     } : {}, containerStyle = style, list = void 0;
                     if (rows.length < 1) {
                         var Placeholder = this.treePlaceholderRenderer, PlaceholderContent = placeholderRenderer;
@@ -1503,7 +1503,8 @@
             shouldCopyOnOutsideDrop: _propTypes2.default.oneOfType([ _propTypes2.default.func, _propTypes2.default.bool ]),
             // Called after children nodes collapsed or expanded.
             onVisibilityToggle: _propTypes2.default.func,
-            dndType: _propTypes2.default.string
+            dndType: _propTypes2.default.string,
+            scrollToIndex: _propTypes2.default.number
         }, ReactSortableTree.defaultProps = {
             canDrag: !0,
             canDrop: null,
