@@ -400,10 +400,10 @@ class ReactSortableTree extends Component {
       placeholderRenderer,
       reactVirtualizedListProps,
       getNodeKey,
+      scrollToIndex,
     } = mergeTheme(this.props);
     const {
       searchMatches,
-      searchFocusTreeIndex,
       draggedNode,
       draggedDepth,
       draggedMinimumTreeIndex,
@@ -423,8 +423,8 @@ class ReactSortableTree extends Component {
 
     // Seek to the focused search result if there is one specified
     const scrollToInfo =
-      searchFocusTreeIndex !== null
-        ? { scrollToIndex: searchFocusTreeIndex }
+      scrollToIndex !== null
+        ? { scrollToIndex: scrollToIndex }
         : {};
 
     let containerStyle = style;
@@ -626,6 +626,8 @@ ReactSortableTree.propTypes = {
   onVisibilityToggle: PropTypes.func,
 
   dndType: PropTypes.string,
+
+  scrollToIndex: PropTypes.number,
 };
 
 ReactSortableTree.defaultProps = {

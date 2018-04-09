@@ -24,6 +24,7 @@ class App extends Component {
       searchString: '',
       searchFocusIndex: 0,
       searchFoundCount: null,
+      scrollToIndex: 0,
       treeData: [
         {
           title: '`title`',
@@ -219,6 +220,7 @@ class App extends Component {
       searchString,
       searchFocusIndex,
       searchFoundCount,
+      scrollToIndex,
     } = this.state;
 
     const alertNodeInfo = ({ node, path, treeIndex }) => {
@@ -301,7 +303,11 @@ class App extends Component {
             >
               &gt;
             </button>
-
+            <button 
+              onClick={(e) => this.setState({scrollToIndex: scrollToIndex + 1})}
+            >
+              next to {scrollToIndex + 1}
+            </button>
             <span>
               &nbsp;
               {searchFoundCount > 0 ? searchFocusIndex + 1 : 0}
@@ -311,6 +317,7 @@ class App extends Component {
           </form>
           <div style={treeContainerStyle}>
             <SortableTree
+              scrollToIndex={scrollToIndex}
               treeData={treeData}
               onChange={this.updateTreeData}
               onMoveNode={({ node, prevTreeIndex, prevPath }) =>
