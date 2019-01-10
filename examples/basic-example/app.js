@@ -305,6 +305,7 @@ class App extends Component {
             </button>
             <button 
               onClick={(e) => this.setState({scrollToIndex: scrollToIndex + 1})}
+              id="btnNext"
             >
               next to {scrollToIndex + 1}
             </button>

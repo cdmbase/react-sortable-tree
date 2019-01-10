@@ -60,14 +60,6 @@ exports[`<SortableTree /> should render tree correctly 1`] = `
           }
         >
           <div
-            className="rst__lineBlock rst__lineHalfHorizontalRight"
-            style={
-              Object {
-                "width": 44,
-              }
-            }
-          />
-          <div
             className="rst__nodeContent"
             style={
               Object {
