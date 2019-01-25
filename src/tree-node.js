@@ -22,8 +22,11 @@ class TreeNode extends Component {
       getPrevRow, // Delete from otherProps
       node, // Delete from otherProps
       path, // Delete from otherProps
+      rowDirection,
       ...otherProps
     } = this.props;
+
+    const rowDirectionClass = rowDirection === 'rtl' ? 'rst__rtl' : null;
 
     // Construct the scaffold representing the structure of the tree
     const scaffoldBlockCount = lowerSiblingCounts.length;
@@ -80,7 +83,7 @@ class TreeNode extends Component {
         <div
           key={`pre_${1 + i}`}
           style={{ width: scaffoldBlockPxWidth }}
-          className={`${'rst__lineBlock'} ${lineClass}`}
+          className={classnames('rst__lineBlock', lineClass, rowDirectionClass)}
         />
       );
 
@@ -101,20 +104,36 @@ class TreeNode extends Component {
           highlightLineClass = 'rst__highlightLineVertical';
         }
 
+        let style;
+        if (rowDirection === 'rtl') {
+          style = {
+            width: scaffoldBlockPxWidth,
+            right: scaffoldBlockPxWidth * i,
+          };
+        } else {
+          // Default ltr
+          style = {
+            width: scaffoldBlockPxWidth,
+            left: scaffoldBlockPxWidth * i,
+          };
+        }
+
         scaffold.push(
           <div
             // eslint-disable-next-line react/no-array-index-key
             key={i}
-            style={{
-              width: scaffoldBlockPxWidth,
-              left: scaffoldBlockPxWidth * i,
-            }}
-            className={classnames('rst__absoluteLineBlock', highlightLineClass)}
+            style={style}
+            className={classnames(
+              'rst__absoluteLineBlock',
+              highlightLineClass,
+              rowDirectionClass
+            )}
           />
         );
       }
     });
 
+<<<<<<< HEAD
     const isDropping = isOver && canDrop;
 
     return connectDropTarget(
@@ -126,6 +145,25 @@ class TreeNode extends Component {
           style={{ left: scaffoldBlockPxWidth * scaffoldBlockCount }}
         >
           {Children.map(children, child => 
+=======
+    let style;
+    if (rowDirection === 'rtl') {
+      style = { right: scaffoldBlockPxWidth * scaffoldBlockCount };
+    } else {
+      // Default ltr
+      style = { left: scaffoldBlockPxWidth * scaffoldBlockCount };
+    }
+
+    return connectDropTarget(
+      <div
+        {...otherProps}
+        className={classnames('rst__node', rowDirectionClass)}
+      >
+        {scaffold}
+
+        <div className="rst__nodeContent" style={style}>
+          {Children.map(children, child =>
+>>>>>>> b5fde6d394544edf6d32b4f70de7fc8d96039796
             cloneElement(child, {
               isOver,
               canDrop,
@@ -146,6 +184,7 @@ TreeNode.defaultProps = {
   swapLength: null,
   canDrop: false,
   draggedNode: null,
+  rowDirection: 'ltr',
 };
 
 TreeNode.propTypes = {
@@ -172,6 +211,9 @@ TreeNode.propTypes = {
   path: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number])
   ).isRequired,
+
+  // rtl support
+  rowDirection: PropTypes.string,
 };
 
 export default TreeNode;

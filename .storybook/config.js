@@ -4,13 +4,13 @@ import { setOptions } from '@storybook/addon-options';
 
 setOptions({
   name: 'React Sortable Tree',
-  url: 'https://github.com/fritz-c/react-sortable-tree',
+  url: 'https://github.com/frontend-collective/react-sortable-tree',
   showAddonPanel: false,
 });
 
 function loadStories() {
   // eslint-disable-next-line global-require
-  require('../examples/storybooks');
+  require('../stories');
 }
 
 configure(loadStories, module);

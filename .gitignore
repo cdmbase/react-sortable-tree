@@ -1,6 +1,6 @@
 node_modules
 npm-debug.log
-yarn.lock
+package-lock.json
 coverage
 
 # Editor and other tmp files
@@ -14,4 +14,13 @@ coverage
 *.DS_Store
 
 # Build directories (Will be preserved by npm)
+.cache
+dist
 build
+style.css
+style.css.map
+
+# Error files
+yarn-error.log
+
+.vscode
