@@ -133,19 +133,6 @@ class TreeNode extends Component {
       }
     });
 
-<<<<<<< HEAD
-    const isDropping = isOver && canDrop;
-
-    return connectDropTarget(
-      <div {...otherProps} className="rst__node">
-        {/*scaffold*/}
-
-        <div
-          className="rst__nodeContent"
-          style={{ left: scaffoldBlockPxWidth * scaffoldBlockCount }}
-        >
-          {Children.map(children, child => 
-=======
     let style;
     if (rowDirection === 'rtl') {
       style = { right: scaffoldBlockPxWidth * scaffoldBlockCount };
@@ -163,7 +150,6 @@ class TreeNode extends Component {
 
         <div className="rst__nodeContent" style={style}>
           {Children.map(children, child =>
->>>>>>> b5fde6d394544edf6d32b4f70de7fc8d96039796
             cloneElement(child, {
               isOver,
               canDrop,
