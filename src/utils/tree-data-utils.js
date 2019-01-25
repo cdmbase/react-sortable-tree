@@ -438,7 +438,8 @@ export function changeNodeAtPath({
       return typeof newNode === 'function'
         ? newNode({ node, treeIndex: currentTreeIndex })
         : newNode;
-    } else if (!node.children) {
+    }
+    if (!node.children) {
       // If this node is part of the path, but has no children, return the unchanged node
       throw new Error('Path referenced children of node with no children.');
     }
@@ -611,6 +612,7 @@ export function getNodeAtPath({
  * @param {!function} getNodeKey - Function to get the key from the nodeData and tree index
  * @param {boolean=} ignoreCollapsed - Ignore children of nodes without `expanded` set to `true`
  * @param {boolean=} expandParent - If true, expands the parentNode specified by parentPath
+ * @param {boolean=} addAsFirstChild - If true, adds new node as first child of tree
  *
  * @return {Object} result
  * @return {Object[]} result.treeData - The updated tree data
@@ -623,6 +625,7 @@ export function addNodeUnderParent({
   getNodeKey,
   ignoreCollapsed = true,
   expandParent = false,
+  addAsFirstChild = false,
 }) {
   if (parentKey === null) {
     return {
@@ -675,9 +678,13 @@ export function addNodeUnderParent({
 
       insertedTreeIndex = nextTreeIndex;
 
+      const children = addAsFirstChild
+        ? [newNode, ...parentNode.children]
+        : [...parentNode.children, newNode];
+
       return {
         ...parentNode,
-        children: [...parentNode.children, newNode],
+        children,
       };
     },
   });

@@ -15,86 +15,99 @@ import DefaultNodeRenderer from './node-renderer-default';
 describe('<SortableTree />', () => {
   it('should render tree correctly', () => {
     const tree = renderer
-      .create(<SortableTree treeData={[{}]} onChange={() => {}} />)
+      .create(<SortableTree treeData={[{}]} onChange={() => {}} />, {
+        createNodeMock: () => ({}),
+      })
       .toJSON();
 
     expect(tree).toMatchSnapshot();
   });
 
   it('should render nodes for flat data', () => {
-    const wrapper = mount(<SortableTree treeData={[]} onChange={() => {}} />);
+    let wrapper;
 
     // No nodes
+    wrapper = mount(<SortableTree treeData={[]} onChange={() => {}} />);
     expect(wrapper.find(TreeNode).length).toEqual(0);
 
     // Single node
-    wrapper.setProps({
-      treeData: [{}],
-    });
+    wrapper = mount(<SortableTree treeData={[{}]} onChange={() => {}} />);
     expect(wrapper.find(TreeNode).length).toEqual(1);
 
     // Two nodes
-    wrapper.setProps({
-      treeData: [{}, {}],
-    });
+    wrapper = mount(<SortableTree treeData={[{}, {}]} onChange={() => {}} />);
     expect(wrapper.find(TreeNode).length).toEqual(2);
   });
 
   it('should render nodes for nested, expanded data', () => {
-    const wrapper = mount(
+    let wrapper;
+
+    // Single Nested
+    wrapper = mount(
       <SortableTree
         treeData={[{ expanded: true, children: [{}] }]}
         onChange={() => {}}
       />
     );
-
-    // Single Nested
     expect(wrapper.find(TreeNode).length).toEqual(2);
 
     // Double Nested
-    wrapper.setProps({
-      treeData: [
-        { expanded: true, children: [{ expanded: true, children: [{}] }] },
-      ],
-    });
+    wrapper = mount(
+      <SortableTree
+        treeData={[
+          { expanded: true, children: [{ expanded: true, children: [{}] }] },
+        ]}
+        onChange={() => {}}
+      />
+    );
     expect(wrapper.find(TreeNode).length).toEqual(3);
 
     // 2x Double Nested Siblings
-    wrapper.setProps({
-      treeData: [
-        { expanded: true, children: [{ expanded: true, children: [{}] }] },
-        { expanded: true, children: [{ expanded: true, children: [{}] }] },
-      ],
-    });
+    wrapper = mount(
+      <SortableTree
+        treeData={[
+          { expanded: true, children: [{ expanded: true, children: [{}] }] },
+          { expanded: true, children: [{ expanded: true, children: [{}] }] },
+        ]}
+        onChange={() => {}}
+      />
+    );
     expect(wrapper.find(TreeNode).length).toEqual(6);
   });
 
   it('should render nodes for nested, collapsed data', () => {
-    const wrapper = mount(
+    let wrapper;
+
+    // Single Nested
+    wrapper = mount(
       <SortableTree
         treeData={[{ expanded: false, children: [{}] }]}
         onChange={() => {}}
       />
     );
-
-    // Single Nested
     expect(wrapper.find(TreeNode).length).toEqual(1);
 
     // Double Nested
-    wrapper.setProps({
-      treeData: [
-        { expanded: false, children: [{ expanded: false, children: [{}] }] },
-      ],
-    });
+    wrapper = mount(
+      <SortableTree
+        treeData={[
+          { expanded: false, children: [{ expanded: false, children: [{}] }] },
+        ]}
+        onChange={() => {}}
+      />
+    );
     expect(wrapper.find(TreeNode).length).toEqual(1);
 
     // 2x Double Nested Siblings, top level of first expanded
-    wrapper.setProps({
-      treeData: [
-        { expanded: true, children: [{ expanded: false, children: [{}] }] },
-        { expanded: false, children: [{ expanded: false, children: [{}] }] },
-      ],
-    });
+    wrapper = mount(
+      <SortableTree
+        treeData={[
+          { expanded: true, children: [{ expanded: false, children: [{}] }] },
+          { expanded: false, children: [{ expanded: false, children: [{}] }] },
+        ]}
+        onChange={() => {}}
+      />
+    );
     expect(wrapper.find(TreeNode).length).toEqual(3);
   });
 
@@ -294,7 +307,7 @@ describe('<SortableTree />', () => {
       />
     );
 
-    const tree = wrapper.find(SortableTreeWithoutDndContext).instance();
+    const tree = wrapper.find('ReactSortableTree').instance();
     expect(tree.state.searchMatches).toEqual([
       { node: { title: 'b' }, path: [0, 1], treeIndex: 1 },
       { node: { title: 'be' }, path: [2, 3], treeIndex: 3 },
@@ -311,6 +324,80 @@ describe('<SortableTree />', () => {
     // only triggers the opening of a single path.
     // Therefore it's 2 instead of 3.
     expect(tree.state.searchFocusTreeIndex).toEqual(2);
+  });
+
+  it('search onlyExpandSearchedNodes should collapse all nodes except matches', () => {
+    const wrapper = mount(
+      <SortableTree
+        treeData={[
+          {
+            title: 'a',
+            children: [{ title: 'b', children: [{ title: 'c' }] }],
+          },
+          {
+            title: 'b',
+            children: [{ title: 'd', children: [{ title: 'be' }] }],
+          },
+          {
+            title: 'c',
+            children: [{ title: 'f', children: [{ title: 'dd' }] }],
+          },
+        ]}
+        onChange={treeData => wrapper.setProps({ treeData })}
+        onlyExpandSearchedNodes
+      />
+    );
+    wrapper.setProps({ searchQuery: 'be' });
+    expect(wrapper.prop('treeData')).toEqual([
+      {
+        title: 'a',
+        children: [
+          {
+            title: 'b',
+            children: [
+              {
+                title: 'c',
+                expanded: false,
+              },
+            ],
+            expanded: false,
+          },
+        ],
+        expanded: false,
+      },
+      {
+        title: 'b',
+        children: [
+          {
+            title: 'd',
+            children: [
+              {
+                title: 'be',
+                expanded: false,
+              },
+            ],
+            expanded: true,
+          },
+        ],
+        expanded: true,
+      },
+      {
+        title: 'c',
+        children: [
+          {
+            title: 'f',
+            children: [
+              {
+                title: 'dd',
+                expanded: false,
+              },
+            ],
+            expanded: false,
+          },
+        ],
+        expanded: false,
+      },
+    ]);
   });
 
   it('loads using SortableTreeWithoutDndContext', () => {
@@ -351,9 +438,8 @@ describe('<SortableTree />', () => {
       .getBackend();
 
     // Retrieve our DnD-wrapped node component type
-    const wrappedNodeType = wrapper
-      .find(SortableTreeWithoutDndContext)
-      .instance().nodeContentRenderer;
+    const wrappedNodeType = wrapper.find('ReactSortableTree').instance()
+      .nodeContentRenderer;
 
     // And get the first such component
     const nodeInstance = wrapper
